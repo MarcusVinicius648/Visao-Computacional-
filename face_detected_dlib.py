@@ -1,5 +1,7 @@
 import cv2 as cv
 import dlib 
+from scipy.spatial import distance as dist #para calculos geométricos e espaciais
+import numpy as np
 
 def Identify_Face(webcam):
     face_detector = dlib.get_frontal_face_detector()
@@ -29,16 +31,47 @@ def DefinePoints(faces,predictor,gray,frame):
         Identify_Eyes(landmarks,frame)
 
 def Identify_Eyes(landmarks,frame):
+
+
+    left_eye = np.array([landmarks.part(i) for i in range(36, 42)]).ravel()
+    right_eye = np.array([landmarks.part(i) for i in range(42, 48)]).ravel()
+
+    print(left_eye[1])
+    
     for i in range(36,42):
         x = landmarks.part(i).x
         y = landmarks.part(i).y
         cv.circle(frame,(x,y),1,(0,255,0),-1)
 
-    for i in range(32,48):
+    for i in range(42,48):
         x = landmarks.part(i).x
         y = landmarks.part(i).y
         cv.circle(frame,(x,y),1,(0,255,0),-1)
+    
+    left_ratio = Area_Eyes(left_eye)
+    right_ratio = Area_Eyes(right_eye)
 
+    #Sleep_Detected(left_ratio,right_ratio)
+
+def Area_Eyes(eye):
+    # Por meio da distância euclidiano dos landmarks dos olhos teremos a área dos olhos abertos
+    A = dist.euclidean(eye[1], eye[5])
+    B = dist.euclidean(eye[2], eye[4])
+    C = dist.euclidean(eye[0], eye[3])
+
+    eye_ratio = (A+B) / (2.0 * C)
+
+    return eye_ratio
+
+def Sleep_Detected(left_ratio,right_ratio):
+    EYE_AR_THRESH = 0.25
+    # Frames with eyes closed
+    EYE_AR_CONSEC_FRAMES = 10
+    
+    if left_ratio < EYE_AR_THRESH:
+        print('Olho esquerdo fechado')
+    if right_ratio < EYE_AR_THRESH:
+        print('Olho direito fechado')
 
 webcam = cv.VideoCapture(0)
 Identify_Face(webcam)
