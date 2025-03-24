@@ -21,7 +21,9 @@ O Dlib é uma biblioteca de aprendizado de máquina que fornece um detector de f
    
 ## Acionamento do Arduino
 Quando o sistema detecta que a pessoa pode ter adormecido, enviamos um sinal via porta serial para um Arduino, que aciona um buzzer para alertar a pessoa.
-![image](https://github.com/user-attachments/assets/53abfcbe-6e83-4f1b-ad71-f4d9629b5a83)
+1. Montagem do Arduino para acionamento de sinal sonoro:
+![image](https://github.com/user-attachments/assets/ea1ced7a-20c8-4edf-a2ab-2e7342afbd14)
+
 
 
 ## Como Executar o Projeto
